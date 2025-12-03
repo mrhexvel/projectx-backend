@@ -17,6 +17,7 @@ model User {
     avatarUrl     String?
     publicHandle  String?       @unique
     locale        String?       @default("en")
+    refreshToken  String?
     createdAt     DateTime      @default(now())
     updatedAt     DateTime      @updatedAt
     profiles      Profile[]
@@ -62,7 +63,7 @@ model ResumeVersion {
     id         String   @id @default(cuid())
     resume     Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
     resumeId   String
-    content    String // markdown or structured JSON
+    content    String
     versionTag String?
     createdAt  DateTime @default(now())
     aiScore    Float?

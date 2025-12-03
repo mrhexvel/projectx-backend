@@ -4,11 +4,14 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { Request, Response } from 'express';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -31,8 +34,9 @@ export class AuthController {
     status: 409,
     description: 'Пользователь с таким email уже существует',
   })
-  async signup(@Body() signupDto: SignupDto) {
-    return this.authService.signup(signupDto);
+  async signup(@Body() signupDto: SignupDto, @Res() res: Response) {
+    const result = await this.authService.signup(signupDto, res);
+    return res.status(HttpStatus.CREATED).json(result);
   }
 
   @Public()
@@ -41,8 +45,9 @@ export class AuthController {
   @ApiOperation({ summary: 'Вход в систему' })
   @ApiResponse({ status: 200, description: 'Успешный вход' })
   @ApiResponse({ status: 401, description: 'Неверные учетные данные' })
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
+    const result = await this.authService.login(loginDto, res);
+    return res.json(result);
   }
 
   @Public()
@@ -63,7 +68,32 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Вход через локальную стратегию' })
   @ApiResponse({ status: 200, description: 'Успешный вход' })
-  async loginLocal(@Request() req) {
-    return this.authService.login({ email: req.user.email, password: '' });
+  async loginLocal(@Req() req: Request & { user: { email: string } }, @Res() res: Response) {
+    const result = await this.authService.login(
+      { email: req.user.email, password: '' },
+      res,
+    );
+    return res.json(result);
+  }
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Обновление токенов' })
+  @ApiResponse({ status: 200, description: 'Токены успешно обновлены' })
+  @ApiResponse({ status: 401, description: 'Неверный или истекший refresh token' })
+  async refresh(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies?.refresh_token;
+    const result = await this.authService.refresh(refreshToken, res);
+    return res.json(result);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Выход из системы' })
+  @ApiResponse({ status: 200, description: 'Успешный выход' })
+  async logout(@CurrentUser() user: { id: string }, @Res() res: Response) {
+    const result = await this.authService.logout(user.id, res);
+    return res.json(result);
   }
 }
