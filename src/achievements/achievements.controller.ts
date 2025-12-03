@@ -18,6 +18,7 @@ import {
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { AchievementsService } from './achievements.service';
+import { AchievementResponseDto } from './dto/achievement-response.dto';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
 
@@ -30,14 +31,18 @@ export class AchievementsController {
 
   @Get()
   @ApiOperation({ summary: 'Получить все достижения текущего пользователя' })
-  @ApiResponse({ status: 200, description: 'Список достижений' })
+  @ApiResponse({
+    status: 200,
+    description: 'Список достижений',
+    type: [AchievementResponseDto],
+  })
   async findAll(@CurrentUser() user: any) {
     return this.achievementsService.findAll(user.id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Создать новое достижение' })
-  @ApiResponse({ status: 201, description: 'Достижение успешно создано' })
+  @ApiResponse({ status: 201, description: 'Достижение успешно создано', type: AchievementResponseDto })
   async create(
     @CurrentUser() user: any,
     @Body() createAchievementDto: CreateAchievementDto,
@@ -48,7 +53,7 @@ export class AchievementsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить достижение по ID' })
   @ApiParam({ name: 'id', description: 'ID достижения' })
-  @ApiResponse({ status: 200, description: 'Информация о достижении' })
+  @ApiResponse({ status: 200, description: 'Информация о достижении', type: AchievementResponseDto })
   @ApiResponse({ status: 404, description: 'Достижение не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async findOne(@Param('id') id: string, @CurrentUser() user: any) {
@@ -58,7 +63,7 @@ export class AchievementsController {
   @Put(':id')
   @ApiOperation({ summary: 'Обновить достижение' })
   @ApiParam({ name: 'id', description: 'ID достижения' })
-  @ApiResponse({ status: 200, description: 'Достижение обновлено' })
+  @ApiResponse({ status: 200, description: 'Достижение обновлено', type: AchievementResponseDto })
   @ApiResponse({ status: 404, description: 'Достижение не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async update(
@@ -72,7 +77,7 @@ export class AchievementsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить достижение' })
   @ApiParam({ name: 'id', description: 'ID достижения' })
-  @ApiResponse({ status: 200, description: 'Достижение удалено' })
+  @ApiResponse({ status: 200, description: 'Достижение удалено', type: AchievementResponseDto })
   @ApiResponse({ status: 404, description: 'Достижение не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async remove(@Param('id') id: string, @CurrentUser() user: any) {

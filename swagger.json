@@ -1,0 +1,2810 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "operationId": "AuthController_signup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Пользователь успешно зарегистрирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Пользователь с таким email уже существует"
+          }
+        },
+        "summary": "Регистрация нового пользователя",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный вход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неверные учетные данные"
+          }
+        },
+        "summary": "Вход в систему",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/forgot": {
+      "post": {
+        "operationId": "AuthController_forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Если пользователь существует, отправлено письмо для сброса пароля",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForgotPasswordResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Запрос на сброс пароля",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/login/local": {
+      "post": {
+        "operationId": "AuthController_loginLocal",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Успешный вход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Вход через локальную стратегию",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Токены успешно обновлены",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неверный или истекший refresh token"
+          }
+        },
+        "summary": "Обновление токенов",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Успешный выход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Выход из системы",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "operationId": "UsersController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Информация о текущем пользователе",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить текущего пользователя",
+        "tags": [
+          "users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_updateMe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Данные пользователя обновлены",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Public handle уже занят"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Обновить данные текущего пользователя",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/users/me/profile": {
+      "put": {
+        "operationId": "UsersController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Профиль обновлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Обновить профиль текущего пользователя",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/users/{handle}": {
+      "get": {
+        "operationId": "UsersController_getPublicProfile",
+        "parameters": [
+          {
+            "name": "handle",
+            "required": true,
+            "in": "path",
+            "description": "Публичный handle пользователя",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Публичный профиль пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicProfileResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить публичный профиль по handle",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/resumes": {
+      "get": {
+        "operationId": "ResumesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Список резюме",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResumeResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить все резюме текущего пользователя",
+        "tags": [
+          "resumes"
+        ]
+      },
+      "post": {
+        "operationId": "ResumesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResumeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Резюме успешно создано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Создать новое резюме",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/resumes/{id}": {
+      "get": {
+        "operationId": "ResumesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о резюме",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить резюме по ID",
+        "tags": [
+          "resumes"
+        ]
+      },
+      "put": {
+        "operationId": "ResumesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateResumeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Резюме обновлено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Обновить резюме",
+        "tags": [
+          "resumes"
+        ]
+      },
+      "delete": {
+        "operationId": "ResumesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Резюме удалено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Удалить резюме",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/resumes/{id}/versions": {
+      "post": {
+        "operationId": "ResumesController_createVersion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResumeVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Версия резюме создана",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeVersionResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Создать новую версию резюме",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/resumes/{id}/publish": {
+      "post": {
+        "operationId": "ResumesController_publish",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Резюме опубликовано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          },
+          "409": {
+            "description": "Невозможно опубликовать резюме без версий"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Опубликовать резюме",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/resumes/{id}/export/pdf": {
+      "get": {
+        "operationId": "ResumesController_exportPdf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PDF файл резюме",
+            "content": {
+              "application/pdf": {}
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Экспортировать резюме в PDF",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/resumes/public/{slug}": {
+      "get": {
+        "operationId": "ResumesController_getPublicResume",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "description": "Slug резюме",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Публичное резюме",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicResumeResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Резюме не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить публичное резюме по slug",
+        "tags": [
+          "resumes"
+        ]
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "operationId": "ProjectsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Список проектов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить все проекты текущего пользователя",
+        "tags": [
+          "projects"
+        ]
+      },
+      "post": {
+        "operationId": "ProjectsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Проект успешно создан",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Slug уже занят"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Создать новый проект",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{id}": {
+      "get": {
+        "operationId": "ProjectsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о проекте",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить проект по ID",
+        "tags": [
+          "projects"
+        ]
+      },
+      "put": {
+        "operationId": "ProjectsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Проект обновлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Обновить проект",
+        "tags": [
+          "projects"
+        ]
+      },
+      "delete": {
+        "operationId": "ProjectsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Проект удален",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Удалить проект",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{id}/media": {
+      "post": {
+        "operationId": "ProjectsController_addMedia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Медиа файл добавлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectMediaResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Добавить медиа файл к проекту",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{id}/media/{mediaId}": {
+      "delete": {
+        "operationId": "ProjectsController_removeMedia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mediaId",
+            "required": true,
+            "in": "path",
+            "description": "ID медиа файла",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Медиа файл удален",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectMediaResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект или медиа файл не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Удалить медиа файл из проекта",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/projects/{id}/ai/describe": {
+      "post": {
+        "operationId": "ProjectsController_generateDescription",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID проекта",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Описание проекта сгенерировано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "example": "Современная платформа для электронной коммерции..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Проект не найден"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Сгенерировать описание проекта с помощью AI",
+        "tags": [
+          "projects"
+        ]
+      }
+    },
+    "/api/ai/improve-text": {
+      "post": {
+        "operationId": "AiController_improveText",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImproveTextDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Текст улучшен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImproveTextResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Улучшить текст с помощью AI",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/api/ai/cover-letter": {
+      "post": {
+        "operationId": "AiController_generateCoverLetter",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoverLetterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Сопроводительное письмо сгенерировано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoverLetterResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Сгенерировать сопроводительное письмо с помощью AI",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/api/ai/analyze-vs-job": {
+      "post": {
+        "operationId": "AiController_analyzeVsJob",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeVsJobDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Анализ выполнен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeVsJobResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Проанализировать резюме относительно описания вакансии",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/api/achievements": {
+      "get": {
+        "operationId": "AchievementsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Список достижений",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AchievementResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить все достижения текущего пользователя",
+        "tags": [
+          "achievements"
+        ]
+      },
+      "post": {
+        "operationId": "AchievementsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAchievementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Достижение успешно создано",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchievementResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Создать новое достижение",
+        "tags": [
+          "achievements"
+        ]
+      }
+    },
+    "/api/achievements/{id}": {
+      "get": {
+        "operationId": "AchievementsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID достижения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о достижении",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchievementResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Достижение не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить достижение по ID",
+        "tags": [
+          "achievements"
+        ]
+      },
+      "put": {
+        "operationId": "AchievementsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID достижения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAchievementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Достижение обновлено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchievementResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Достижение не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Обновить достижение",
+        "tags": [
+          "achievements"
+        ]
+      },
+      "delete": {
+        "operationId": "AchievementsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID достижения",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Достижение удалено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchievementResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Доступ запрещен"
+          },
+          "404": {
+            "description": "Достижение не найдено"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Удалить достижение",
+        "tags": [
+          "achievements"
+        ]
+      }
+    },
+    "/api/storage/presigned-upload": {
+      "post": {
+        "operationId": "StorageController_generatePresignedUploadUrl",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Presigned URL для загрузки сгенерирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignedUploadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить presigned URL для загрузки файла",
+        "tags": [
+          "storage"
+        ]
+      }
+    },
+    "/api/storage/presigned-download": {
+      "post": {
+        "operationId": "StorageController_generatePresignedDownloadUrl",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Presigned URL для скачивания сгенерирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignedDownloadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Получить presigned URL для скачивания файла",
+        "tags": [
+          "storage"
+        ]
+      }
+    },
+    "/api/storage/upload": {
+      "post": {
+        "operationId": "StorageController_uploadFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Файл для загрузки",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Файл успешно загружен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Загрузить файл напрямую в хранилище",
+        "tags": [
+          "storage"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "PortfolioX API",
+    "description": "Backend API для платформы PortfolioX - совместное резюме + портфолио",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email пользователя",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль пользователя (минимум 8 символов)",
+            "example": "password123",
+            "minLength": 8
+          },
+          "name": {
+            "type": "string",
+            "description": "Имя пользователя",
+            "example": "Иван Иванов"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email пользователя",
+            "example": "user@example.com"
+          },
+          "emailVerified": {
+            "type": "boolean",
+            "description": "Подтвержден ли email",
+            "example": false
+          },
+          "name": {
+            "type": "object",
+            "description": "Имя пользователя",
+            "nullable": true
+          },
+          "headline": {
+            "type": "object",
+            "description": "Заголовок профиля",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "object",
+            "description": "URL аватара",
+            "nullable": true
+          },
+          "publicHandle": {
+            "type": "object",
+            "description": "Публичный handle",
+            "nullable": true
+          },
+          "locale": {
+            "type": "object",
+            "description": "Локаль",
+            "example": "en",
+            "nullable": true
+          },
+          "profiles": {
+            "description": "Профили пользователя",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileResponseDto"
+            }
+          },
+          "_count": {
+            "description": "Количество элементов",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserCountsDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "emailVerified",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "SignupResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "Данные пользователя",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email пользователя",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль пользователя",
+            "example": "password123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "Данные пользователя",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email пользователя для сброса пароля",
+            "example": "user@example.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ForgotPasswordResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Сообщение о статусе запроса",
+            "example": "If user exists, password reset email sent"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "RefreshResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "Данные пользователя",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "LogoutResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Сообщение об успешном выходе",
+            "example": "Logged out successfully"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "LinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID ссылки",
+            "example": "clx1234567890"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL ссылки",
+            "example": "https://github.com/user"
+          },
+          "title": {
+            "type": "object",
+            "description": "Название ссылки",
+            "example": "GitHub",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "createdAt"
+        ]
+      },
+      "ProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID профиля",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "bio": {
+            "type": "object",
+            "description": "Биография",
+            "nullable": true
+          },
+          "visible": {
+            "type": "boolean",
+            "description": "Видимость профиля",
+            "example": true
+          },
+          "links": {
+            "description": "Ссылки профиля",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkResponseDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "visible",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UserCountsDto": {
+        "type": "object",
+        "properties": {
+          "resumes": {
+            "type": "number",
+            "description": "Количество резюме",
+            "example": 3
+          },
+          "projects": {
+            "type": "number",
+            "description": "Количество проектов",
+            "example": 5
+          },
+          "achievements": {
+            "type": "number",
+            "description": "Количество достижений",
+            "example": 2
+          }
+        },
+        "required": [
+          "resumes",
+          "projects",
+          "achievements"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Имя пользователя",
+            "example": "Иван Иванов"
+          },
+          "headline": {
+            "type": "string",
+            "description": "Заголовок профиля",
+            "example": "Senior Full Stack Developer"
+          },
+          "avatarUrl": {
+            "type": "string",
+            "description": "URL аватара пользователя",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "locale": {
+            "type": "string",
+            "description": "Локаль пользователя",
+            "example": "ru-RU"
+          },
+          "publicHandle": {
+            "type": "string",
+            "description": "Публичный handle пользователя",
+            "example": "ivan_ivanov"
+          }
+        }
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "bio": {
+            "type": "string",
+            "description": "Биография пользователя",
+            "example": "Опытный разработчик с 5+ годами опыта"
+          },
+          "visible": {
+            "type": "boolean",
+            "description": "Видимость профиля",
+            "example": true
+          }
+        }
+      },
+      "PublicProfileResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "name": {
+            "type": "object",
+            "description": "Имя пользователя",
+            "nullable": true
+          },
+          "headline": {
+            "type": "object",
+            "description": "Заголовок профиля",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "object",
+            "description": "URL аватара",
+            "nullable": true
+          },
+          "publicHandle": {
+            "type": "object",
+            "description": "Публичный handle",
+            "nullable": true
+          },
+          "locale": {
+            "type": "object",
+            "description": "Локаль",
+            "example": "en",
+            "nullable": true
+          },
+          "profiles": {
+            "description": "Профили пользователя",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfileResponseDto"
+            }
+          },
+          "resumes": {
+            "type": "array",
+            "description": "Опубликованные резюме"
+          },
+          "projects": {
+            "type": "array",
+            "description": "Публичные проекты"
+          },
+          "achievements": {
+            "type": "array",
+            "description": "Достижения"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ResumeVersionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID версии резюме",
+            "example": "clx1234567890"
+          },
+          "resumeId": {
+            "type": "string",
+            "description": "ID резюме",
+            "example": "clx1234567890"
+          },
+          "content": {
+            "type": "string",
+            "description": "Содержимое резюме",
+            "example": "{\"sections\": [...]}"
+          },
+          "versionTag": {
+            "type": "object",
+            "description": "Тег версии",
+            "example": "v1.0",
+            "nullable": true
+          },
+          "aiScore": {
+            "type": "object",
+            "description": "AI оценка",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "resumeId",
+          "content",
+          "createdAt"
+        ]
+      },
+      "ResumeCountsDto": {
+        "type": "object",
+        "properties": {
+          "versions": {
+            "type": "number",
+            "description": "Количество версий",
+            "example": 3
+          }
+        },
+        "required": [
+          "versions"
+        ]
+      },
+      "ResumeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID резюме",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название резюме",
+            "example": "Software Engineer Resume"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug резюме",
+            "example": "software-engineer-resume"
+          },
+          "description": {
+            "type": "object",
+            "description": "Описание резюме",
+            "nullable": true
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Опубликовано ли резюме",
+            "example": false
+          },
+          "versions": {
+            "description": "Версии резюме",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResumeVersionResponseDto"
+            }
+          },
+          "_count": {
+            "description": "Количество версий",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ResumeCountsDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "slug",
+          "isPublished",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateResumeDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название резюме",
+            "example": "Frontend Developer Resume"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug резюме (автоматически генерируется из названия, если не указан)",
+            "example": "frontend-developer-resume"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание резюме",
+            "example": "Резюме для позиции Frontend Developer"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateResumeDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название резюме",
+            "example": "Frontend Developer Resume"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание резюме",
+            "example": "Резюме для позиции Frontend Developer"
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Статус публикации резюме",
+            "example": true
+          }
+        }
+      },
+      "CreateResumeVersionDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Содержимое резюме (markdown или JSON)",
+            "example": "# Experience\n\n## Company Name\n- Developed..."
+          },
+          "versionTag": {
+            "type": "string",
+            "description": "Тег версии",
+            "example": "v1.0"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "PublicResumeUserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "name": {
+            "type": "object",
+            "description": "Имя пользователя",
+            "nullable": true
+          },
+          "headline": {
+            "type": "object",
+            "description": "Заголовок профиля",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "object",
+            "description": "URL аватара",
+            "nullable": true
+          },
+          "publicHandle": {
+            "type": "object",
+            "description": "Публичный handle",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "PublicResumeResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID резюме",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название резюме",
+            "example": "Software Engineer Resume"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug резюме",
+            "example": "software-engineer-resume"
+          },
+          "description": {
+            "type": "object",
+            "description": "Описание резюме",
+            "nullable": true
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Опубликовано ли резюме",
+            "example": true
+          },
+          "user": {
+            "description": "Данные пользователя",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublicResumeUserDto"
+              }
+            ]
+          },
+          "versions": {
+            "description": "Версии резюме",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResumeVersionResponseDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "slug",
+          "isPublished",
+          "user",
+          "versions",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ProjectMediaResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID медиа файла",
+            "example": "clx1234567890"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "ID проекта",
+            "example": "clx1234567890"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL медиа файла",
+            "example": "https://example.com/image.jpg"
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип медиа файла",
+            "enum": [
+              "IMAGE",
+              "VIDEO",
+              "FILE"
+            ],
+            "example": "IMAGE"
+          },
+          "altText": {
+            "type": "object",
+            "description": "Альтернативный текст",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "url",
+          "type",
+          "createdAt"
+        ]
+      },
+      "ProjectLinkResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID ссылки",
+            "example": "clx1234567890"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL ссылки",
+            "example": "https://github.com/user/project"
+          },
+          "title": {
+            "type": "object",
+            "description": "Название ссылки",
+            "example": "GitHub Repository",
+            "nullable": true
+          },
+          "projectId": {
+            "type": "object",
+            "description": "ID проекта",
+            "example": "clx1234567890",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "createdAt"
+        ]
+      },
+      "ProjectCountsDto": {
+        "type": "object",
+        "properties": {
+          "media": {
+            "type": "number",
+            "description": "Количество медиа файлов",
+            "example": 3
+          },
+          "links": {
+            "type": "number",
+            "description": "Количество ссылок",
+            "example": 2
+          }
+        },
+        "required": [
+          "media",
+          "links"
+        ]
+      },
+      "ProjectResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID проекта",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название проекта",
+            "example": "E-commerce Platform"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug проекта",
+            "example": "e-commerce-platform"
+          },
+          "shortDesc": {
+            "type": "object",
+            "description": "Краткое описание",
+            "nullable": true
+          },
+          "description": {
+            "type": "object",
+            "description": "Полное описание",
+            "nullable": true
+          },
+          "techStack": {
+            "description": "Технологический стек",
+            "example": [
+              "React",
+              "Node.js",
+              "PostgreSQL"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "description": "Видимость проекта",
+            "enum": [
+              "PUBLIC",
+              "PRIVATE",
+              "UNLISTED"
+            ],
+            "example": "PUBLIC"
+          },
+          "media": {
+            "description": "Медиа файлы проекта",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectMediaResponseDto"
+            }
+          },
+          "links": {
+            "description": "Ссылки проекта",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectLinkResponseDto"
+            }
+          },
+          "_count": {
+            "description": "Количество элементов",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectCountsDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "slug",
+          "techStack",
+          "visibility",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название проекта",
+            "example": "E-commerce Platform"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Slug проекта (автоматически генерируется из названия, если не указан)",
+            "example": "e-commerce-platform"
+          },
+          "shortDesc": {
+            "type": "string",
+            "description": "Краткое описание проекта",
+            "example": "Современная платформа для электронной коммерции"
+          },
+          "description": {
+            "type": "string",
+            "description": "Полное описание проекта",
+            "example": "Полнофункциональная платформа для электронной коммерции с поддержкой множества платежных систем"
+          },
+          "techStack": {
+            "description": "Технологический стек проекта",
+            "example": [
+              "React",
+              "Node.js",
+              "PostgreSQL"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateProjectDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название проекта",
+            "example": "E-commerce Platform"
+          },
+          "shortDesc": {
+            "type": "string",
+            "description": "Краткое описание проекта",
+            "example": "Современная платформа для электронной коммерции"
+          },
+          "description": {
+            "type": "string",
+            "description": "Полное описание проекта",
+            "example": "Полнофункциональная платформа для электронной коммерции"
+          },
+          "techStack": {
+            "description": "Технологический стек проекта",
+            "example": [
+              "React",
+              "Node.js",
+              "PostgreSQL"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "visibility": {
+            "type": "string",
+            "description": "Видимость проекта",
+            "enum": [
+              "PUBLIC",
+              "PRIVATE",
+              "UNLISTED"
+            ],
+            "example": "PUBLIC"
+          }
+        }
+      },
+      "ImproveTextDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Текст для улучшения",
+            "example": "Я разработал приложение"
+          },
+          "goal": {
+            "type": "string",
+            "description": "Цель улучшения текста",
+            "example": "Сделать текст более профессиональным"
+          },
+          "language": {
+            "type": "string",
+            "description": "Язык текста",
+            "example": "ru"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "ImproveTextResponseDto": {
+        "type": "object",
+        "properties": {
+          "improvedText": {
+            "type": "string",
+            "description": "Улучшенный текст",
+            "example": "Разработал и внедрил систему, которая увеличила производительность на 40%"
+          }
+        },
+        "required": [
+          "improvedText"
+        ]
+      },
+      "CoverLetterDto": {
+        "type": "object",
+        "properties": {
+          "resumeId": {
+            "type": "string",
+            "description": "ID резюме",
+            "example": "clx1234567890"
+          },
+          "jobDescription": {
+            "type": "string",
+            "description": "Описание вакансии",
+            "example": "Ищем опытного разработчика с опытом работы..."
+          }
+        },
+        "required": [
+          "resumeId",
+          "jobDescription"
+        ]
+      },
+      "CoverLetterResponseDto": {
+        "type": "object",
+        "properties": {
+          "coverLetter": {
+            "type": "string",
+            "description": "Сгенерированное сопроводительное письмо",
+            "example": "Уважаемый [Имя],\n\nЯ пишу, чтобы выразить заинтересованность..."
+          }
+        },
+        "required": [
+          "coverLetter"
+        ]
+      },
+      "AnalyzeVsJobDto": {
+        "type": "object",
+        "properties": {
+          "resumeText": {
+            "type": "string",
+            "description": "Текст резюме",
+            "example": "Опытный разработчик с 5+ годами опыта..."
+          },
+          "jobDescription": {
+            "type": "string",
+            "description": "Описание вакансии",
+            "example": "Ищем опытного разработчика с опытом работы..."
+          }
+        },
+        "required": [
+          "resumeText",
+          "jobDescription"
+        ]
+      },
+      "AnalyzeVsJobResponseDto": {
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "number",
+            "description": "Оценка совместимости резюме с вакансией (от 0 до 1)",
+            "example": 0.75
+          },
+          "suggestions": {
+            "description": "Предложения по улучшению резюме",
+            "example": [
+              "Добавьте больше информации о опыте работы с React",
+              "Укажите конкретные метрики достижений"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "strengths": {
+            "description": "Сильные стороны резюме",
+            "example": [
+              "Отличный опыт работы с Node.js",
+              "Сильные навыки работы в команде"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingKeywords": {
+            "description": "Отсутствующие ключевые слова",
+            "example": [
+              "TypeScript",
+              "Docker",
+              "Kubernetes"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "score",
+          "suggestions",
+          "strengths",
+          "missingKeywords"
+        ]
+      },
+      "AchievementResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID достижения",
+            "example": "clx1234567890"
+          },
+          "userId": {
+            "type": "string",
+            "description": "ID пользователя",
+            "example": "clx1234567890"
+          },
+          "title": {
+            "type": "string",
+            "description": "Название достижения",
+            "example": "Победитель хакатона"
+          },
+          "body": {
+            "type": "object",
+            "description": "Описание достижения",
+            "nullable": true
+          },
+          "date": {
+            "type": "object",
+            "description": "Дата достижения",
+            "example": "2025-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "link": {
+            "type": "object",
+            "description": "Ссылка на достижение",
+            "example": "https://example.com/achievement",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата создания",
+            "example": "2025-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Дата обновления",
+            "example": "2025-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateAchievementDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название достижения",
+            "example": "Победитель хакатона 2024"
+          },
+          "body": {
+            "type": "string",
+            "description": "Описание достижения",
+            "example": "Занял первое место на хакатоне по разработке мобильных приложений"
+          },
+          "date": {
+            "type": "string",
+            "description": "Дата достижения",
+            "example": "2025-01-15"
+          },
+          "link": {
+            "type": "string",
+            "description": "Ссылка на достижение",
+            "example": "https://example.com/achievement"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "UpdateAchievementDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Название достижения",
+            "example": "Победитель хакатона 2024"
+          },
+          "body": {
+            "type": "string",
+            "description": "Описание достижения",
+            "example": "Занял первое место на хакатоне по разработке мобильных приложений"
+          },
+          "date": {
+            "type": "string",
+            "description": "Дата достижения",
+            "example": "2025-01-15"
+          },
+          "link": {
+            "type": "string",
+            "description": "Ссылка на достижение",
+            "example": "https://example.com/achievement"
+          }
+        }
+      },
+      "PresignedUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "uploadUrl": {
+            "type": "string",
+            "description": "Presigned URL для загрузки файла",
+            "example": "https://s3.example.com/bucket/file?X-Amz-Algorithm=..."
+          },
+          "fileKey": {
+            "type": "string",
+            "description": "Ключ файла в хранилище",
+            "example": "uploads/123e4567-e89b-12d3-a456-426614174000.jpg"
+          },
+          "publicUrl": {
+            "type": "string",
+            "description": "Публичный URL файла",
+            "example": "https://storage.example.com/bucket/uploads/123e4567-e89b-12d3-a456-426614174000.jpg"
+          }
+        },
+        "required": [
+          "uploadUrl",
+          "fileKey",
+          "publicUrl"
+        ]
+      },
+      "PresignedDownloadResponseDto": {
+        "type": "object",
+        "properties": {
+          "downloadUrl": {
+            "type": "string",
+            "description": "Presigned URL для скачивания файла",
+            "example": "https://s3.example.com/bucket/file?X-Amz-Algorithm=..."
+          }
+        },
+        "required": [
+          "downloadUrl"
+        ]
+      },
+      "UploadFileDto": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Файл для загрузки"
+          },
+          "folder": {
+            "type": "string",
+            "description": "Папка для сохранения файла (опционально)",
+            "example": "uploads"
+          }
+        },
+        "required": [
+          "file"
+        ]
+      },
+      "UploadFileResponseDto": {
+        "type": "object",
+        "properties": {
+          "fileKey": {
+            "type": "string",
+            "description": "Ключ файла в хранилище",
+            "example": "uploads/123e4567-e89b-12d3-a456-426614174000.jpg"
+          },
+          "publicUrl": {
+            "type": "string",
+            "description": "Публичный URL файла",
+            "example": "https://storage.example.com/bucket/uploads/123e4567-e89b-12d3-a456-426614174000.jpg"
+          }
+        },
+        "required": [
+          "fileKey",
+          "publicUrl"
+        ]
+      }
+    }
+  }
+}

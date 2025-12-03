@@ -21,7 +21,7 @@ export class UpdateAchievementDto {
 
   @ApiPropertyOptional({
     description: 'Дата достижения',
-    example: '2024-01-15',
+    example: '2025-01-15',
   })
   @IsOptional()
   @IsDateString()

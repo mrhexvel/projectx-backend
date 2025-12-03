@@ -22,6 +22,11 @@ import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CreateResumeVersionDto } from './dto/create-resume-version.dto';
 import { CreateResumeDto } from './dto/create-resume.dto';
+import {
+  PublicResumeResponseDto,
+  ResumeResponseDto,
+  ResumeVersionResponseDto,
+} from './dto/resume-response.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
 import { PdfService } from './pdf.service';
 import { ResumesService } from './resumes.service';
@@ -38,14 +43,18 @@ export class ResumesController {
 
   @Get()
   @ApiOperation({ summary: 'Получить все резюме текущего пользователя' })
-  @ApiResponse({ status: 200, description: 'Список резюме' })
+  @ApiResponse({
+    status: 200,
+    description: 'Список резюме',
+    type: [ResumeResponseDto],
+  })
   async findAll(@CurrentUser() user: any) {
     return this.resumesService.findAll(user.id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Создать новое резюме' })
-  @ApiResponse({ status: 201, description: 'Резюме успешно создано' })
+  @ApiResponse({ status: 201, description: 'Резюме успешно создано', type: ResumeResponseDto })
   @ApiResponse({ status: 409, description: 'Slug уже занят' })
   async create(
     @CurrentUser() user: any,
@@ -57,7 +66,7 @@ export class ResumesController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить резюме по ID' })
   @ApiParam({ name: 'id', description: 'ID резюме' })
-  @ApiResponse({ status: 200, description: 'Информация о резюме' })
+  @ApiResponse({ status: 200, description: 'Информация о резюме', type: ResumeResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async findOne(@Param('id') id: string, @CurrentUser() user: any) {
@@ -67,7 +76,7 @@ export class ResumesController {
   @Put(':id')
   @ApiOperation({ summary: 'Обновить резюме' })
   @ApiParam({ name: 'id', description: 'ID резюме' })
-  @ApiResponse({ status: 200, description: 'Резюме обновлено' })
+  @ApiResponse({ status: 200, description: 'Резюме обновлено', type: ResumeResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async update(
@@ -81,7 +90,7 @@ export class ResumesController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить резюме' })
   @ApiParam({ name: 'id', description: 'ID резюме' })
-  @ApiResponse({ status: 200, description: 'Резюме удалено' })
+  @ApiResponse({ status: 200, description: 'Резюме удалено', type: ResumeResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async remove(@Param('id') id: string, @CurrentUser() user: any) {
@@ -91,7 +100,7 @@ export class ResumesController {
   @Post(':id/versions')
   @ApiOperation({ summary: 'Создать новую версию резюме' })
   @ApiParam({ name: 'id', description: 'ID резюме' })
-  @ApiResponse({ status: 201, description: 'Версия резюме создана' })
+  @ApiResponse({ status: 201, description: 'Версия резюме создана', type: ResumeVersionResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async createVersion(
@@ -105,7 +114,7 @@ export class ResumesController {
   @Post(':id/publish')
   @ApiOperation({ summary: 'Опубликовать резюме' })
   @ApiParam({ name: 'id', description: 'ID резюме' })
-  @ApiResponse({ status: 200, description: 'Резюме опубликовано' })
+  @ApiResponse({ status: 200, description: 'Резюме опубликовано', type: ResumeResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   @ApiResponse({
@@ -144,7 +153,7 @@ export class ResumesController {
   @Get('public/:slug')
   @ApiOperation({ summary: 'Получить публичное резюме по slug' })
   @ApiParam({ name: 'slug', description: 'Slug резюме' })
-  @ApiResponse({ status: 200, description: 'Публичное резюме' })
+  @ApiResponse({ status: 200, description: 'Публичное резюме', type: PublicResumeResponseDto })
   @ApiResponse({ status: 404, description: 'Резюме не найдено' })
   async getPublicResume(@Param('slug') slug: string) {
     return this.resumesService.getPublicResume(slug);

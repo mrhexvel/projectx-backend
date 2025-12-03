@@ -8,6 +8,11 @@ import {
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { AiService } from './ai.service';
 import { AnalyzeVsJobDto } from './dto/analyze-vs-job.dto';
+import {
+  AnalyzeVsJobResponseDto,
+  CoverLetterResponseDto,
+  ImproveTextResponseDto,
+} from './dto/ai-response.dto';
 import { CoverLetterDto } from './dto/cover-letter.dto';
 import { ImproveTextDto } from './dto/improve-text.dto';
 
@@ -20,7 +25,7 @@ export class AiController {
 
   @Post('improve-text')
   @ApiOperation({ summary: 'Улучшить текст с помощью AI' })
-  @ApiResponse({ status: 200, description: 'Текст улучшен' })
+  @ApiResponse({ status: 200, description: 'Текст улучшен', type: ImproveTextResponseDto })
   async improveText(@Body() improveTextDto: ImproveTextDto) {
     const improvedText = await this.aiService.improveText(improveTextDto);
     return { improvedText };
@@ -33,6 +38,7 @@ export class AiController {
   @ApiResponse({
     status: 200,
     description: 'Сопроводительное письмо сгенерировано',
+    type: CoverLetterResponseDto,
   })
   async generateCoverLetter(@Body() coverLetterDto: CoverLetterDto) {
     const coverLetter =
@@ -44,7 +50,7 @@ export class AiController {
   @ApiOperation({
     summary: 'Проанализировать резюме относительно описания вакансии',
   })
-  @ApiResponse({ status: 200, description: 'Анализ выполнен' })
+  @ApiResponse({ status: 200, description: 'Анализ выполнен', type: AnalyzeVsJobResponseDto })
   async analyzeVsJob(@Body() analyzeDto: AnalyzeVsJobDto) {
     return this.aiService.analyzeVsJob(analyzeDto);
   }

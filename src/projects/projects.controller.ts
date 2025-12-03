@@ -19,6 +19,10 @@ import { AiService } from '../ai/ai.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CreateProjectDto } from './dto/create-project.dto';
+import {
+  ProjectMediaResponseDto,
+  ProjectResponseDto,
+} from './dto/project-response.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectsService } from './projects.service';
 
@@ -34,14 +38,18 @@ export class ProjectsController {
 
   @Get()
   @ApiOperation({ summary: 'Получить все проекты текущего пользователя' })
-  @ApiResponse({ status: 200, description: 'Список проектов' })
+  @ApiResponse({
+    status: 200,
+    description: 'Список проектов',
+    type: [ProjectResponseDto],
+  })
   async findAll(@CurrentUser() user: any) {
     return this.projectsService.findAll(user.id);
   }
 
   @Post()
   @ApiOperation({ summary: 'Создать новый проект' })
-  @ApiResponse({ status: 201, description: 'Проект успешно создан' })
+  @ApiResponse({ status: 201, description: 'Проект успешно создан', type: ProjectResponseDto })
   @ApiResponse({ status: 409, description: 'Slug уже занят' })
   async create(
     @CurrentUser() user: any,
@@ -53,7 +61,7 @@ export class ProjectsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить проект по ID' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
-  @ApiResponse({ status: 200, description: 'Информация о проекте' })
+  @ApiResponse({ status: 200, description: 'Информация о проекте', type: ProjectResponseDto })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async findOne(@Param('id') id: string, @CurrentUser() user: any) {
@@ -63,7 +71,7 @@ export class ProjectsController {
   @Put(':id')
   @ApiOperation({ summary: 'Обновить проект' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
-  @ApiResponse({ status: 200, description: 'Проект обновлен' })
+  @ApiResponse({ status: 200, description: 'Проект обновлен', type: ProjectResponseDto })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async update(
@@ -77,7 +85,7 @@ export class ProjectsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить проект' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
-  @ApiResponse({ status: 200, description: 'Проект удален' })
+  @ApiResponse({ status: 200, description: 'Проект удален', type: ProjectResponseDto })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async remove(@Param('id') id: string, @CurrentUser() user: any) {
@@ -87,7 +95,7 @@ export class ProjectsController {
   @Post(':id/media')
   @ApiOperation({ summary: 'Добавить медиа файл к проекту' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
-  @ApiResponse({ status: 201, description: 'Медиа файл добавлен' })
+  @ApiResponse({ status: 201, description: 'Медиа файл добавлен', type: ProjectMediaResponseDto })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async addMedia(
@@ -108,7 +116,7 @@ export class ProjectsController {
   @ApiOperation({ summary: 'Удалить медиа файл из проекта' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
   @ApiParam({ name: 'mediaId', description: 'ID медиа файла' })
-  @ApiResponse({ status: 200, description: 'Медиа файл удален' })
+  @ApiResponse({ status: 200, description: 'Медиа файл удален', type: ProjectMediaResponseDto })
   @ApiResponse({ status: 404, description: 'Проект или медиа файл не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async removeMedia(
@@ -122,7 +130,19 @@ export class ProjectsController {
   @Post(':id/ai/describe')
   @ApiOperation({ summary: 'Сгенерировать описание проекта с помощью AI' })
   @ApiParam({ name: 'id', description: 'ID проекта' })
-  @ApiResponse({ status: 200, description: 'Описание проекта сгенерировано' })
+  @ApiResponse({
+    status: 200,
+    description: 'Описание проекта сгенерировано',
+    schema: {
+      type: 'object',
+      properties: {
+        description: {
+          type: 'string',
+          example: 'Современная платформа для электронной коммерции...',
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 404, description: 'Проект не найден' })
   @ApiResponse({ status: 403, description: 'Доступ запрещен' })
   async generateDescription(

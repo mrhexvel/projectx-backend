@@ -11,6 +11,11 @@ import { Public } from '../common/decorators/public.decorator';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  ProfileResponseDto,
+  PublicProfileResponseDto,
+  UserResponseDto,
+} from './dto/user-response.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -25,6 +30,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Информация о текущем пользователе',
+    type: UserResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
   async getMe(@CurrentUser() user: any) {
@@ -33,7 +39,7 @@ export class UsersController {
 
   @Put('me')
   @ApiOperation({ summary: 'Обновить данные текущего пользователя' })
-  @ApiResponse({ status: 200, description: 'Данные пользователя обновлены' })
+  @ApiResponse({ status: 200, description: 'Данные пользователя обновлены', type: UserResponseDto })
   @ApiResponse({ status: 409, description: 'Public handle уже занят' })
   async updateMe(
     @CurrentUser() user: any,
@@ -44,7 +50,7 @@ export class UsersController {
 
   @Put('me/profile')
   @ApiOperation({ summary: 'Обновить профиль текущего пользователя' })
-  @ApiResponse({ status: 200, description: 'Профиль обновлен' })
+  @ApiResponse({ status: 200, description: 'Профиль обновлен', type: ProfileResponseDto })
   async updateProfile(
     @CurrentUser() user: any,
     @Body() updateProfileDto: UpdateProfileDto,
@@ -56,7 +62,7 @@ export class UsersController {
   @Get(':handle')
   @ApiOperation({ summary: 'Получить публичный профиль по handle' })
   @ApiParam({ name: 'handle', description: 'Публичный handle пользователя' })
-  @ApiResponse({ status: 200, description: 'Публичный профиль пользователя' })
+  @ApiResponse({ status: 200, description: 'Публичный профиль пользователя', type: PublicProfileResponseDto })
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
   async getPublicProfile(@Param('handle') handle: string) {
     return this.usersService.getPublicProfile(handle);

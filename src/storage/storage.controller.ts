@@ -18,6 +18,10 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UploadFileDto, UploadFileResponseDto } from './dto/upload-file.dto';
+import {
+  PresignedDownloadResponseDto,
+  PresignedUploadResponseDto,
+} from './dto/storage-response.dto';
 import { StorageService } from './storage.service';
 
 @ApiTags('storage')
@@ -32,6 +36,7 @@ export class StorageController {
   @ApiResponse({
     status: 200,
     description: 'Presigned URL для загрузки сгенерирован',
+    type: PresignedUploadResponseDto,
   })
   async generatePresignedUploadUrl(
     @Body() body: { fileName: string; contentType: string; folder?: string },
@@ -55,6 +60,7 @@ export class StorageController {
   @ApiResponse({
     status: 200,
     description: 'Presigned URL для скачивания сгенерирован',
+    type: PresignedDownloadResponseDto,
   })
   async generatePresignedDownloadUrl(
     @Body() body: { fileKey: string; expiresIn?: number },
